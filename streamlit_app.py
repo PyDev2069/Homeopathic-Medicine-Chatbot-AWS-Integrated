@@ -25,17 +25,17 @@ st.set_page_config(
 st.title("🩺 Homeopathic Medicine Chatbot")
 st.caption("Powered by Gemini + FAISS + AWS S3")
 
-# ── Secrets (Streamlit Cloud uses st.secrets, .env works locally) ──
+# ── Secrets ──────────────────────────────────────────────────
 def get_secret(key):
     try:
         return st.secrets[key]
     except Exception:
         return os.getenv(key)
 
-GOOGLE_API_KEY     = get_secret("GOOGLE_API_KEY")
-AWS_ACCESS_KEY_ID  = get_secret("AWS_ACCESS_KEY_ID")
+GOOGLE_API_KEY        = get_secret("GOOGLE_API_KEY")
+AWS_ACCESS_KEY_ID     = get_secret("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = get_secret("AWS_SECRET_ACCESS_KEY")
-AWS_REGION         = get_secret("AWS_REGION")
+AWS_REGION            = get_secret("AWS_REGION")
 
 # ── Load model + index once (cached) ─────────────────────────
 @st.cache_resource(show_spinner="Loading knowledge base...")
@@ -47,7 +47,7 @@ def load_qa_chain():
         region_name=AWS_REGION
     )
 
-    bucket_name = "homeopathy-datasets"
+    bucket_name = "homeopathy-datasets-1"
     file_key    = "homeopathic_medicines_dataset_1700.csv"
 
     obj = s3.get_object(Bucket=bucket_name, Key=file_key)
@@ -104,5 +104,3 @@ if prompt := st.chat_input("Describe your symptoms or ask a question..."):
         st.markdown(answer)
 
     st.session_state.messages.append({"role": "assistant", "content": answer})
-
-google-generativeai
